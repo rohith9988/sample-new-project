@@ -1,17 +1,20 @@
 pipeline {
-agent any 
-environment {
- DOCKER_HUB_REPO = "rohithc1/individual"
- IMAGE_TAG = latest"
-}
-stages{
-stage('checkout code'){
-steps{
-      git branch:'main'
-       url:'https://github.com/rohith9988/sample-new-project.git'
-     }
-}
-  stage('Build Docker Image') {
+    agent any
+
+    environment {
+        DOCKER_HUB_REPO = "rohithc1/individual"
+        IMAGE_TAG = "latest"
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/rohith9988/sample-new-project.git'
+            }
+        }
+
+        stage('Build Docker Image') {
             steps {
                 script {
                     echo "Building Docker Image: ${env.DOCKER_HUB_REPO}:${env.IMAGE_TAG}"
@@ -19,7 +22,8 @@ steps{
                 }
             }
         }
- stage('Push to DockerHub') {
+
+        stage('Push to DockerHub') {
             steps {
                 script {
                     echo "Pushing image to Docker Hub..."
@@ -30,13 +34,15 @@ steps{
             }
         }
     }
- post {
+
+    post {
         success {
             echo "Pipeline executed successfully!"
         }
         failure {
             echo "Pipeline failed. Please check logs."
-        }
-    }
+        }
+    }
 }
+
 
